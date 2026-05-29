@@ -103,7 +103,7 @@ The K1 operates in **Modes** and can perform different actions depending on the 
 
 ## 5. Controls
 
-- **Joystick controls:** [Booster Wiki](https://booster.feishu.cn/wiki/E3q5wF5SnitXZgkY18Uc8odBnXb)
+- **Joystick controls:** [Booster Wiki](https://booster.feishu.cn/wiki/E3q5wF5SnitXZgkY18Uc8odBnXb#Ae7zdQ0jVoNBrHxULRLcVjHMnSd)
 - **Mobile app:** Booster app available on iOS and Android
 - If you plan on doing anything other than with the remote controll or the app you will need to install ubuntu 22.04 as it is required software for the software development kit (SDK)
 
