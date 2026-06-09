@@ -4,11 +4,7 @@ This guide sets up the full **simulation and reinforcement-learning (RL) stack**
 Booster K1 — the two simulators the K1 pipeline uses and every Booster repository you need to
 clone:
 
-<p>
-  <img src="assets/isaac_lab_logo.jpeg" alt="NVIDIA Isaac Lab" height="120" />
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="assets/mujoco_logo.jpeg" alt="MuJoCo" height="120" />
-</p>
+![Isaac Lab](assets/isaac_lab_logo.jpeg) &nbsp;&nbsp;&nbsp; ![MuJoCo](assets/mujoco_logo.jpeg)
 
 - **NVIDIA Isaac Sim + Isaac Lab** — the GPU-accelerated simulator where policies are *trained*
   (thousands of K1s in parallel). Used by `booster_train`.
@@ -115,11 +111,10 @@ These projects need **incompatible** Python versions — do **not** install them
 
 ## Part 3 — Isaac Sim + Isaac Lab (the training simulator)
 
-<img src="assets/isaac_lab_logo.jpeg" alt="Isaac Lab" height="90" align="left" hspace="12" />
+![Isaac Lab](assets/isaac_lab_logo.jpeg)
 
 Isaac Sim is NVIDIA's GPU physics simulator; **Isaac Lab** is the RL framework that runs on top
 of it. `booster_train` is **tested with Isaac Lab 2.2 and Isaac Sim 5.0** — we pin those versions.
-<br clear="left" />
 
 ### Option A — pip install (recommended)
 
@@ -272,11 +267,10 @@ This also **exports** the trained policy to TorchScript/ONNX under
 
 ## Part 6 — MuJoCo (the sim2sim engine)
 
-<img src="assets/mujoco_logo.jpeg" alt="MuJoCo" height="70" align="left" hspace="12" />
+![MuJoCo](assets/mujoco_logo.jpeg)
 
 MuJoCo is the fast, lightweight physics engine used to verify a policy in a *different* simulator
 before deploying to hardware — catching sim-specific overfitting. It runs anywhere (GPU optional).
-<br clear="left" />
 
 ```bash
 # Deployment env — Python 3.10+
