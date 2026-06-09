@@ -4,8 +4,6 @@ This guide sets up the full **simulation and reinforcement-learning (RL) stack**
 Booster K1 — the two simulators the K1 pipeline uses and every Booster repository you need to
 clone:
 
-![Isaac Lab](assets/isaac_lab_logo.jpeg) &nbsp;&nbsp;&nbsp; ![MuJoCo](assets/mujoco_logo.jpeg)
-
 - **NVIDIA Isaac Sim + Isaac Lab** — the GPU-accelerated simulator where policies are *trained*
   (thousands of K1s in parallel). Used by `booster_train`.
 - **MuJoCo** — a fast, lightweight physics engine used for *sim2sim* verification before you
