@@ -1,10 +1,14 @@
 # K1_Tutorial
-A series of tutorials for getting started with the Booster K1 humanoid robot. Covers everything from hardware overview and operating modes to SSH configuration and ROS 2 development. Designed for college-level students with little to no prior experience with humanoid robotics.
+Documentation for getting started with the Booster K1 humanoid robot — hardware overview, operating modes, SSH configuration, ROS 2 development, and the full simulation / RL stack. Written as a reference for researchers and developers picking up work on the K1.
+
+**Guides:**
+- [Setup & Orientation](Setup_and_Orientation.md) — hardware overview, operating modes, safety, power on/off, SSH, and ROS 2 verification
+- [Simulation Setup](Simulation_Setup.md) — Isaac Sim / Isaac Lab (training) and MuJoCo (sim2sim), plus cloning the Booster repos
 
 
-# K1 Robot Course — Pre-Course Setup
+# Environment Setup
 
-Run `install_all.sh` **once** on a fresh Ubuntu 22.04 machine before Week 1.
+Run `install_all.sh` **once** on a fresh Ubuntu 22.04 machine to set up the base environment.
 It takes approximately 20–40 minutes depending on your internet speed.
 
 ---
@@ -22,9 +26,9 @@ It takes approximately 20–40 minutes depending on your internet speed.
 | CPU | 4 cores | 8+ cores |
 
 > **No NVIDIA GPU?** The script installs CPU-only PyTorch automatically.
-> Weeks 1–8 work fine without a GPU. Week 9 (RL / Isaac Lab training)
-> requires a GPU, but you can still run the pre-trained MuJoCo policy
-> on CPU (slowly).
+> Most workflows (SSH, ROS 2, vision, voice) work fine without a GPU.
+> RL / Isaac Lab training requires a GPU, but you can still run the
+> pre-trained MuJoCo policy on CPU (slowly).
 
 ---
 
@@ -56,19 +60,24 @@ source ~/.bashrc
 
 ## What Gets Installed
 
-| Step | Packages | Used In |
+| Step | Packages | Purpose |
 |------|----------|---------|
-| 1 | `openssh-client`, `sshpass`, `net-tools`, `ffmpeg`, `portaudio19-dev`, `git` | Week 1 — SSH & Linux |
-| 1 | `ros-humble-desktop`, `ros-humble-rmw-fastrtps-cpp` | Week 2 — ROS2 |
-| 2 | `ros-humble-rviz2`, `ros-humble-tf2-tools`, `ros-humble-xacro` | Week 3 — Visualization |
-| 3 | `booster_robotics_sdk` (built from source), `booster_robotics_sdk_ros2` | Week 4 — SDK & Motion |
-| 4 | `ultralytics` (YOLOv8), `opencv-python`, `numpy` | Week 5 — YOLO Vision |
-| 5 | `openai-whisper`, `sounddevice`, `groq`, `piper-tts`, Piper danny-low model | Week 6 — Voice Pipeline |
-| 6 | `matplotlib`, `pandas` | Week 7 — Sensor Fusion |
-| 7 | `filterpy` (Kalman filter) | Week 8 — Ball Tracking |
-| 8 | `torch`, `torchvision`, `transformers`, `accelerate` | Week 9 — RL |
-| 9 | `mujoco`, `booster_deploy` | Week 9–10 — Simulation |
-| 10 | FastDDS XML config, `~/.bashrc` environment variables | Week 2+ — DDS |
+| 1 | `openssh-client`, `sshpass`, `net-tools`, `ffmpeg`, `portaudio19-dev`, `git` | SSH & Linux access |
+| 1 | `ros-humble-desktop`, `ros-humble-rmw-fastrtps-cpp` | ROS 2 stack |
+| 2 | `ros-humble-rviz2`, `ros-humble-tf2-tools`, `ros-humble-xacro` | Visualization |
+| 3 | `booster_robotics_sdk` (built from source), `booster_robotics_sdk_ros2` | SDK & motion control |
+| 4 | `ultralytics` (YOLOv8), `opencv-python`, `numpy` | YOLO vision |
+| 5 | `openai-whisper`, `sounddevice`, `groq`, `piper-tts`, Piper danny-low model | Voice pipeline |
+| 6 | `matplotlib`, `pandas` | Sensor fusion |
+| 7 | `filterpy` (Kalman filter) | Ball tracking |
+| 8 | `torch`, `torchvision`, `transformers`, `accelerate` | Reinforcement learning |
+| 9 | `mujoco`, `booster_deploy` | Simulation (sim2sim) |
+| 10 | FastDDS XML config, `~/.bashrc` environment variables | DDS / robot comms |
+| † | Isaac Sim + Isaac Lab (`isaacsim`, `IsaacLab`) | RL training |
+
+> **†** Isaac Sim + Isaac Lab are **not** installed by `install_all.sh` — they're large and GPU-only.
+> Set them up separately via **[Simulation_Setup.md](Simulation_Setup.md)**. MuJoCo (step 9) is the
+> lightweight sim2sim engine and *is* installed by the base script.
 
 **Disk usage (approximate):**
 - ROS2 Humble desktop: ~2.5 GB
@@ -76,8 +85,20 @@ source ~/.bashrc
 - Whisper base model (downloaded on first use): ~150 MB
 - YOLOv8n model (downloaded on first use): ~6 MB
 - Piper danny-low voice: ~60 MB
+- MuJoCo: ~0.1 GB
 - Booster SDK + deploy: ~500 MB
 - **Total: ~10–12 GB**
+
+**Simulation / RL training stack** (installed separately via [Simulation_Setup.md](Simulation_Setup.md)):
+- Isaac Sim + Isaac Lab (incl. extension cache): ~20–30 GB
+
+---
+
+## Simulation Setup
+
+For setting up **Isaac Sim / Isaac Lab** (training) and **MuJoCo** (sim2sim) for the K1 — plus
+cloning the Booster repos (`booster_assets`, `booster_train`, `booster_deploy`, `booster_gym`,
+`booster_robotics_sdk`) — see **[Simulation_Setup.md](Simulation_Setup.md)**.
 
 ---
 
@@ -86,10 +107,10 @@ source ~/.bashrc
 The K1 robot communicates over a **wired Ethernet** connection only.
 
 ### 1. Connect the cable
-Plug an Ethernet cable between your laptop's wired port and the robot
+Plug an Ethernet cable between your workstation's wired port and the robot
 (directly, or via an unmanaged switch on the same subnet).
 
-### 2. Set a static IP on your laptop
+### 2. Set a static IP on your workstation
 
 **Via GUI (NetworkManager):**
 1. Open Settings → Network → Wired → gear icon
@@ -159,6 +180,16 @@ ping -c 2 192.168.10.102
 ssh booster@192.168.10.102 "ros2 topic list | head -5"
 ```
 
+**Simulation / RL stack** — Isaac Sim + Isaac Lab live in their own `isaaclab` conda env (not the
+base `~/.bashrc` shell), so verify them there:
+
+```bash
+conda activate isaaclab
+cd ~/booster/IsaacLab && ./isaaclab.sh -p scripts/tutorials/00_sim/create_empty.py   # window opens, exits clean
+```
+
+Full simulation checklist: [Simulation_Setup.md › Verification Checklist](Simulation_Setup.md#verification-checklist).
+
 ---
 
 ## Troubleshooting
@@ -187,7 +218,7 @@ export PYTHONPATH=~/booster_robotics_sdk/build/lib:$PYTHONPATH
 ```
 
 **`ping 192.168.10.102` — no reply**
-Check: (1) robot is powered on and showing green LED, (2) Ethernet cable is plugged in at both ends, (3) your laptop IP is `192.168.10.x` — run `ip addr show` and look for `192.168.10.10`.
+Check: (1) robot is powered on and showing green LED, (2) Ethernet cable is plugged in at both ends, (3) your workstation IP is `192.168.10.x` — run `ip addr show` and look for `192.168.10.10`.
 
 **`ssh booster@192.168.10.102` — connection refused**
 The SSH daemon on the robot may not have started yet. Wait 60 seconds after the green LED appears and try again.
@@ -198,3 +229,16 @@ Ensure the NVIDIA driver is installed: `nvidia-smi`. If it shows an error, insta
 sudo ubuntu-drivers autoinstall
 sudo reboot
 ```
+
+**`import mujoco` fails, or the viewer is a black window / `GL` error**
+MuJoCo needs system GL libraries. Install them and, on a headless machine, pick a backend:
+```bash
+sudo apt install -y libglfw3 libegl1 libosmesa6
+export MUJOCO_GL=egl   # or 'osmesa' for CPU-only / no display
+```
+
+**Isaac Sim / Isaac Lab won't install or import**
+Isaac Sim is a large, GPU-only install handled **separately** from `install_all.sh` (see
+[Simulation_Setup.md](Simulation_Setup.md)). It needs an RTX GPU with RT cores, driver ≥ 580, and
+GLIBC ≥ 2.35 (Ubuntu 22.04+; check `ldd --version`). Most import errors are an Isaac Sim ↔ Isaac Lab
+version mismatch — see [Simulation_Setup.md › Troubleshooting](Simulation_Setup.md#troubleshooting).

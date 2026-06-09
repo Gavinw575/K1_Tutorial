@@ -1,7 +1,7 @@
-# Week 1 — K1 Setup & Orientation
+# K1 Setup & Orientation
 
-Ensure you have read through the readme and installed all the needed files if you are having issues
-**Reference:** [Booster K1 Manual](https://booster.feishu.cn/wiki/E3q5wF5SnitXZgkY18Uc8odBnXb) — read through and use as a reference throughout the course.
+Make sure you have read through the README and installed the base environment if you run into issues.
+**Reference:** [Booster K1 Manual](https://booster.feishu.cn/wiki/E3q5wF5SnitXZgkY18Uc8odBnXb) — read through and keep handy as a reference while working with the K1.
 
 ---
 
@@ -58,12 +58,12 @@ The K1 operates in **Modes** and can perform different actions depending on the 
 
 ### PREP Mode
 - Robot assumes and holds a standing posture; joints strongly resist movement
-- Can stand on its own but **will not balance itself** aka dont push!
+- Can stand on its own but **will not balance itself** — do not push it
 - Can switch to: **all other modes**
 
 ### WALK Mode
 - Full locomotion: omni-walk, rotate, step, stand, move head
-- More resilient than PREP will attempt to recover balance if pushed
+- More resilient than PREP — will actively try to recover balance if pushed
 - Can switch to: **all other modes**
 - ⚠️ **Make sure the robot is in PREP and STANDING firmly before switching to WALK**
 
@@ -89,7 +89,7 @@ The K1 operates in **Modes** and can perform different actions depending on the 
 ### Powering On
 1. Confirm K1 is resting safely and battery is fully charged and installed
 2. Hold power button for 3 seconds — light will turn on
-3. Hold the robot still while the internal measurement movement (IMU) initializes; a tone will play when ready
+3. Hold the robot still while the Inertial Measurement Unit (IMU) initializes; a tone will play when ready
 4. Enter PREP (while supporting or laying down): remote **LT + Start**, or press the **STAND** button on the back
 5. Enter WALK: remote **RT + A**, or press the **WALK** button
 
@@ -105,16 +105,16 @@ The K1 operates in **Modes** and can perform different actions depending on the 
 
 - **Joystick controls:** [Booster Wiki](https://booster.feishu.cn/wiki/E3q5wF5SnitXZgkY18Uc8odBnXb#Ae7zdQ0jVoNBrHxULRLcVjHMnSd)
 - **Mobile app:** Booster app available on iOS and Android
-- If you plan on doing anything other than with the remote controll or the app you will need to install ubuntu 22.04 as it is required software for the software development kit (SDK)
+- Anything beyond the remote control or the mobile app requires the **Booster SDK**, which runs on Ubuntu 22.04 — see the [README](README.md) for environment setup
 
 ---
 
 ## 6. SSH Setup
 
-SSH (Secure Shell) SSH is a network protocol that can let you remotely access and control another computer (or robot) over a network connection. Invented in 1995 this allows for wireless communication through Wi-Fi or Ethernet over an open terminal instead of physically being there. 
-When running a command such as ssh user@192.168.1.100 you are authenticating with the remote machine, using a password or a keypair, and getting placed into that machines shell session. After you are connected, any commands you run will be run on that machine
+SSH (Secure Shell) is a network protocol that lets you remotely access and control another computer (or robot) over a network. It works over either Wi-Fi or Ethernet, giving you a terminal session on the remote machine instead of needing physical access.
+When you run a command such as `ssh booster@192.168.10.102` you authenticate with the remote machine — using a password or a key pair — and are placed into that machine's shell session. From then on, any commands you run execute on that machine.
 
-### 6.1 Configure Your Laptop's Ethernet
+### 6.1 Configure Your Workstation's Ethernet
 1. Confirm the Ethernet cable is connected
 2. Open network settings and find manual/static addressing
 3. Set IP address: `192.168.10.10` (Allows for easier SSH)
@@ -133,7 +133,7 @@ ssh booster@192.168.10.102
 
 ## 7. Verifying ROS 2
 
-The K1 runs a **ROS 2 Humble** stack. For now we just confirm it's running on the robot itself.
+The K1 runs a **ROS 2 Humble** stack. Here we confirm it's running on the robot itself.
 
 ```bash
 # After SSH-ing in:
@@ -143,10 +143,3 @@ ros2 topic list
 
 <!-- Add: screenshot of ros2 topic list output on the robot -->
 
----
-
-## Tasks
-
-| # | Task | Points |
-|---|------|--------|
-| 1 | SSH into the robot and confirm ROS 2 is running. Include a screenshot. | 25 |
