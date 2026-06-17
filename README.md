@@ -4,6 +4,7 @@ Documentation for getting started with the Booster K1 humanoid robot — hardwar
 **Guides:**
 - [Setup & Orientation](Setup_and_Orientation.md) — hardware overview, operating modes, safety, power on/off, SSH, and ROS 2 verification
 - [Simulation Setup](Simulation_Setup.md) — Isaac Sim / Isaac Lab (training) and MuJoCo (sim2sim), plus cloning the Booster repos
+- [Head Camera — Live Video Feed](Head_Camera.md) — stream the head camera to any workstation over HTTP (the reliable `/booster_video_stream` path)
 
 
 # Environment Setup
